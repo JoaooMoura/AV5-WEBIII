@@ -1,0 +1,200 @@
+name: automanager-av5
+
+services:
+  automanager:
+    image: automanager-av5/automanager
+    build:
+      context: .
+      args:
+        PROJECT: automanager
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8081:8081"
+    volumes:
+      - automanager-data:/data
+    networks:
+      - automanager-network
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8081'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  api-clientes-empresa:
+    image: automanager-av5/api-clientes-empresa
+    build:
+      context: .
+      args:
+        PROJECT: api-clientes-empresa
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8082:8082"
+    volumes:
+      - automanager-data:/data
+    networks:
+      - automanager-network
+    depends_on:
+      automanager:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8082'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  api-funcionarios-empresa:
+    image: automanager-av5/api-funcionarios-empresa
+    build:
+      context: .
+      args:
+        PROJECT: api-funcionarios-empresa
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8083:8083"
+    volumes:
+      - automanager-data:/data
+    networks:
+      - automanager-network
+    depends_on:
+      automanager:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8083'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  api-catalogo-empresa:
+    image: automanager-av5/api-catalogo-empresa
+    build:
+      context: .
+      args:
+        PROJECT: api-catalogo-empresa
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8084:8084"
+    volumes:
+      - automanager-data:/data
+    networks:
+      - automanager-network
+    depends_on:
+      automanager:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8084'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  api-vendas-periodo:
+    image: automanager-av5/api-vendas-periodo
+    build:
+      context: .
+      args:
+        PROJECT: api-vendas-periodo
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8085:8085"
+    volumes:
+      - automanager-data:/data
+    networks:
+      - automanager-network
+    depends_on:
+      automanager:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8085'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  api-veiculos-atendidos:
+    image: automanager-av5/api-veiculos-atendidos
+    build:
+      context: .
+      args:
+        PROJECT: api-veiculos-atendidos
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: ""
+    ports:
+      - "8086:8086"
+    volumes:
+      - automanager-data:/data
+    networks:
+      - automanager-network
+    depends_on:
+      automanager:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8086'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+  automanager-gateway:
+    image: automanager-av5/automanager-gateway
+    build:
+      context: .
+      args:
+        PROJECT: automanager-gateway
+    environment:
+      GATEWAY_PUBLIC_URL: http://localhost:8080
+      AUTOMANAGER_CORE_URL: http://automanager:8081
+      API_CLIENTES_URL: http://api-clientes-empresa:8082
+      API_FUNCIONARIOS_URL: http://api-funcionarios-empresa:8083
+      API_CATALOGO_URL: http://api-catalogo-empresa:8084
+      API_VENDAS_URL: http://api-vendas-periodo:8085
+      API_VEICULOS_URL: http://api-veiculos-atendidos:8086
+    ports:
+      - "8080:8080"
+    networks:
+      - automanager-network
+    depends_on:
+      automanager:
+        condition: service_healthy
+      api-clientes-empresa:
+        condition: service_healthy
+      api-funcionarios-empresa:
+        condition: service_healthy
+      api-catalogo-empresa:
+        condition: service_healthy
+      api-vendas-periodo:
+        condition: service_healthy
+      api-veiculos-atendidos:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8080'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+
+volumes:
+  automanager-data:
+
+networks:
+  automanager-network:
+    driver: bridge
