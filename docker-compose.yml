@@ -29,7 +29,7 @@ services:
     build:
       context: .
       args:
-        PROJECT: api-clientes-empresa
+        PROJECT: ms-clientes-empresa
     environment:
       SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
       SPRING_DATASOURCE_USERNAME: sa
@@ -55,7 +55,7 @@ services:
     build:
       context: .
       args:
-        PROJECT: api-funcionarios-empresa
+        PROJECT: ms-funcionarios-empresa
     environment:
       SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
       SPRING_DATASOURCE_USERNAME: sa
@@ -81,7 +81,7 @@ services:
     build:
       context: .
       args:
-        PROJECT: api-catalogo-empresa
+        PROJECT: ms-catalogo-empresa
     environment:
       SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
       SPRING_DATASOURCE_USERNAME: sa
@@ -107,7 +107,7 @@ services:
     build:
       context: .
       args:
-        PROJECT: api-vendas-periodo
+        PROJECT: ms-vendas-periodo
     environment:
       SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
       SPRING_DATASOURCE_USERNAME: sa
@@ -133,7 +133,7 @@ services:
     build:
       context: .
       args:
-        PROJECT: api-veiculos-atendidos
+        PROJECT: ms-veiculos-atendidos
     environment:
       SPRING_DATASOURCE_URL: jdbc:h2:file:/data/automanager-av5;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE
       SPRING_DATASOURCE_USERNAME: sa
